@@ -1,35 +1,35 @@
 function update(keys) {
     updatePlayer(keys);
     updateEnemies(player);
+    updateProjectiles();
     updateCamera(player);
 
-    document.getElementById("forma").innerText =
-        player.forma + (player.supremo ? " SUPREMO" : "");
-    document.getElementById("vida").innerText = player.vida;
-    document.getElementById("energia").innerText = Math.floor(player.energia);
-    document.getElementById("fase").innerText = 1;
+    forma.innerText = player.forma + (player.supremo ? " SUPREMO" : "");
+    vida.innerText = Math.floor(player.vida);
+    energia.innerText = Math.floor(player.energia);
 }
 
 function draw(ctx) {
-    ctx.clearRect(0, 0, 960, 540);
+    ctx.clearRect(0,0,960,540);
 
     ctx.fillStyle = "#222";
-    ctx.fillRect(-cameraX, MAP.groundY, MAP.width, 60);
+    ctx.fillRect(-cameraX, MAP.ground, MAP.width, 80);
 
-    let spr = player.forma;
-    if (player.supremo && spr === "fogo") spr = "fogoSupremo";
+    let sprite = player.forma;
+    if (player.supremo && sprite === "fogo") sprite = "fogoSupremo";
 
     drawSprite(
         ctx,
         player.x - cameraX,
         player.y,
-        8,
-        SPRITES[spr].idle,
-        SPRITES[spr].colors
+        SPRITES[sprite].idle,
+        SPRITES[sprite].colors
     );
 
     enemies.forEach(e => {
         ctx.fillStyle = "#a00";
-        ctx.fillRect(e.x - cameraX, e.y, 32, 32);
+        ctx.fillRect(e.x - cameraX, e.y, 64, 64);
     });
+
+    drawProjectiles(ctx);
 }
