@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+    background: black;
+    color: #0f0;
+    font-family: monospace;
+}
+
+#hud {
+    text-align: center;
+    padding: 6px;
+}
+
+canvas {
+    display: block;
+    margin: auto;
+    background: #111;
+    image-rendering: pixelated;
+}
