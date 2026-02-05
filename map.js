@@ -1,6 +1,6 @@
 const MAP = {
     width: 3000,
-    groundY: 480
+    ground: 460
 };
 
 let cameraX = 0;
