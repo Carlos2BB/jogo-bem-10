@@ -1,10 +1,12 @@
-function drawSprite(ctx, x, y, p, sprite, colors) {
-    for (let r = 0; r < sprite.length; r++) {
-        for (let c = 0; c < sprite[r].length; c++) {
+const PIXEL = 8;
+
+function drawSprite(ctx, x, y, sprite, colors) {
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
             const px = sprite[r][c];
             if (px) {
                 ctx.fillStyle = colors[px];
-                ctx.fillRect(x + c * p, y + r * p, p, p);
+                ctx.fillRect(x + c * PIXEL, y + r * PIXEL, PIXEL, PIXEL);
             }
         }
     }
@@ -13,10 +15,14 @@ function drawSprite(ctx, x, y, p, sprite, colors) {
 const SPRITES = {
     ben: {
         idle: [
-            [0,1,1,0],
-            [1,2,2,1],
-            [0,3,3,0],
-            [4,0,0,4]
+            [0,1,1,1,1,1,1,0],
+            [1,2,2,2,2,2,2,1],
+            [1,3,3,3,3,3,3,1],
+            [0,3,3,3,3,3,3,0],
+            [0,4,0,4,4,0,4,0],
+            [4,0,0,0,0,0,0,4],
+            [4,0,0,0,0,0,0,4],
+            [0,4,0,0,0,0,4,0]
         ],
         colors: {
             1:"#654321",
@@ -25,12 +31,17 @@ const SPRITES = {
             4:"#000"
         }
     },
+
     fogo: {
         idle: [
-            [0,1,1,0],
-            [1,2,2,1],
-            [0,3,3,0],
-            [1,0,0,1]
+            [0,1,1,1,1,1,1,0],
+            [1,2,2,2,2,2,2,1],
+            [1,3,3,3,3,3,3,1],
+            [0,3,3,3,3,3,3,0],
+            [0,1,0,3,3,0,1,0],
+            [1,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,1],
+            [0,1,0,0,0,0,1,0]
         ],
         colors: {
             1:"#ff4500",
@@ -38,18 +49,23 @@ const SPRITES = {
             3:"#ffff00"
         }
     },
+
     fogoSupremo: {
         idle: [
-            [0,1,1,0],
-            [1,2,2,1],
-            [0,3,3,0],
-            [4,4,4,4]
+            [1,1,1,1,1,1,1,1],
+            [1,2,4,2,2,4,2,1],
+            [1,4,3,3,3,3,4,1],
+            [1,3,3,3,3,3,3,1],
+            [1,4,3,3,3,3,4,1],
+            [1,1,0,3,3,0,1,1],
+            [1,4,0,0,0,0,4,1],
+            [1,1,4,0,0,4,1,1]
         ],
         colors: {
             1:"#ffffff",
             2:"#ff4500",
             3:"#ffff00",
-            4:"#ff0"
+            4:"#00ffff"
         }
     }
 };
