@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Ben 10 – Supremacia Alienígena (Fan Game)</title>
+<style>
+body {
+    margin: 0;
+    background: #000;
+    color: #0f0;
+    font-family: Arial;
+}
+canvas {
+    background: #111;
+    display: block;
+    margin: auto;
+    border: 3px solid #0f0;
+}
+#ui {
+    text-align: center;
+    padding: 8px;
+}
+</style>
+</head>
+<body>
+
+<div id="ui">
+    Alien: <span id="alienNome"></span> |
+    Vida: <span id="vida"></span> |
+    Supremo: <span id="supremo"></span>
+</div>
+
+<canvas id="game" width="800" height="400"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+const gravity = 0.6;
+let keys = {};
+
+document.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
+document.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
+
+/* ===== ALIENS ===== */
+const aliens = [
+    { nome:"Fogo Fátuo", cor:"#ff4500", atk:2, supremo:true },
+    { nome:"Eco Eco", cor:"#00ffff", atk:1.5, supremo:true },
+    { nome:"Friagem", cor:"#00f", atk:1.2, supremo:false },
+    { nome:"Macaco-Aranha", cor:"#ff00ff", atk:1.3, supremo:false },
+    { nome:"Humungousaur", cor:"#0f0", atk:2.5, supremo:true }
+];
+
+let alienIndex = 0;
+let supremoAtivo = false;
+
+/* ===== JOGADOR ===== */
+const player = {
+    x: 50,
+    y: 300,
+    w: 40,
+    h: 60,
+    dx: 0,
+    dy: 0,
+    vida: 100,
+    noChao: false
+};
+
+/* ===== INIMIGOS ===== */
+let inimigos = [
+    { x:600, y:320, vida:40, tipo:"DNAliens" },
+    { x:720, y:320, vida:80, tipo:"Highbreed" }
+];
+
+/* ===== ATUALIZA UI ===== */
+function atualizarUI() {
+    document.getElementById("alienNome").innerText = aliens[alienIndex].nome;
+    document.getElementById("vida").innerText = player.vida;
+    document.getElementById("supremo").innerText = supremoAtivo ? "SIM" : "NÃO";
+}
+
+/* ===== GAME LOOP ===== */
+function update() {
+    // Movimento
+    player.dx = 0;
+    if (keys["arrowright"]) player.dx = 4;
+    if (keys["arrowleft"]) player.dx = -4;
+
+    // Pulo
+    if (keys["arrowup"] && player.noChao) {
+        player.dy = -12;
+        player.noChao = false;
+    }
+
+    // Trocar alien
+    if (keys["x"]) {
+        alienIndex = (alienIndex + 1) % aliens.length;
+        supremoAtivo = false;
+        keys["x"] = false;
+    }
+
+    // Supremo
+    if (keys["c"] && aliens[alienIndex].supremo) {
+        supremoAtivo = !supremoAtivo;
+        keys["c"] = false;
+    }
+
+    // Física
+    player.dy += gravity;
+    player.x += player.dx;
+    player.y += player.dy;
+
+    if (player.y + player.h >= 360) {
+        player.y = 360 - player.h;
+        player.dy = 0;
+        player.noChao = true;
+    }
+
+    // Ataque
+    if (keys["z"]) {
+        inimigos.forEach(inimigo => {
+            if (Math.abs(player.x - inimigo.x) < 50) {
+                inimigo.vida -= aliens[alienIndex].atk * (supremoAtivo ? 2 : 1);
+            }
+        });
+    }
+
+    inimigos = inimigos.filter(i => i.vida > 0);
+
+    atualizarUI();
+}
+
+/* ===== DESENHO ===== */
+function draw() {
+    ctx.clearRect(0,0,800,400);
+
+    // Chão
+    ctx.fillStyle = "#222";
+    ctx.fillRect(0,360,800,40);
+
+    // Jogador
+    ctx.fillStyle = supremoAtivo ? "#fff" : aliens[alienIndex].cor;
+    ctx.fillRect(player.x, player.y, player.w, player.h);
+
+    // Inimigos
+    inimigos.forEach(i => {
+        ctx.fillStyle = i.tipo === "Highbreed" ? "#800" : "#a00";
+        ctx.fillRect(i.x, i.y, 40, 40);
+    });
+}
+
+function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+
+</body>
+</html>
